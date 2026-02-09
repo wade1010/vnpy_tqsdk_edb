@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vnpy-tqsdk-edb"
+version = "1.0.0"
+description = "vnpy使用天勤免费的EDB数据服务下载1分钟K线和日线数据"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "MIT"}
+authors = [
+    {name = "wade1010"}
+]
+keywords = ["vnpy", "tqsdk", "edb", "datafeed", "trading"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Financial and Insurance Industry",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Office/Business :: Financial :: Investment",
+]
+
+dependencies = [
+    "pandas>=1.0.0",
+    "requests>=2.25.0",
+    "vnpy>=3.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/wade1010/vnpy_tqsdk_edb"
+Repository = "https://github.com/wade1010/vnpy_tqsdk_edb"
+
+[tool.setuptools]
+packages = ["vnpy_tqsdk_edb"]
+
+[tool.setuptools.package-dir]
+vnpy_tqsdk_edb = "."
