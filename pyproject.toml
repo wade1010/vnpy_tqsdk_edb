@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "vnpy-tqsdk-edb"
-version = "1.0.0"
+version = "1.0.1"
 description = "vnpy使用天勤免费的EDB数据服务下载1分钟K线和日线数据"
 readme = "README.md"
 requires-python = ">=3.8"

@@ -5,7 +5,7 @@ VnPy 的 EDB 数据源适配器。
 """
 
 import traceback
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Callable
 
 import pandas as pd
@@ -41,6 +41,9 @@ class EdbDatafeed(BaseDatafeed):
 
         self.gateway_name: str = GATEWAY_NAME
 
+    def init(self, output: Callable = print) -> bool:
+        return True
+
     def query_bar_history(
             self, req: HistoryRequest, output: Callable = print
     ) -> list[BarData]:
@@ -69,16 +72,25 @@ class EdbDatafeed(BaseDatafeed):
         now = datetime.now(DB_TZ)
         req.start = req.start.astimezone(DB_TZ)
         days_from_start = (now - req.start).days
-        if req.interval == Interval.MINUTE and days_from_start > FREE_MODE_MINUTE_DATA_DAYS:
-            output(f"免费用户仅可获取最近 {FREE_MODE_MINUTE_DATA_DAYS} 天的分钟数据。您请求的起始日距今 {days_from_start} 天。日线数据可查询任意历史区间。")
-            return []
+        if req.interval == Interval.MINUTE:
+            if days_from_start > FREE_MODE_MINUTE_DATA_DAYS:
+                output(f"免费用户仅可获取最近 {FREE_MODE_MINUTE_DATA_DAYS} 天的分钟数据。您请求的起始日距今 {days_from_start} 天。日线数据可查询任意历史区间。")
+                return []
+            elif days_from_start == FREE_MODE_MINUTE_DATA_DAYS:
+                # 1分钟周期刚好满1年时，使用当前时间往前一年+1分钟作为起始时间
+                if period == 60:
+                    # 1分钟接口,只支持,当前时间前的1年内
+                    req.start = now - timedelta(days=FREE_MODE_MINUTE_DATA_DAYS) + timedelta(minutes=1)
 
         if req.symbol.endswith("888"):
             tq_symbol = f"KQ.m@{req.exchange.value}.{req.symbol.replace('888', '')}"
         elif req.symbol.endswith("999"):
             tq_symbol = f"KQ.m@{req.exchange.value}.{req.symbol.replace('999', '')}"
         else:
-            tq_symbol = f"{req.exchange.value}.{req.symbol}"
+            if req.exchange.value in req.symbol:
+                tq_symbol = req.symbol
+            else:
+                tq_symbol = f"{req.exchange.value}.{req.symbol}"
 
         # 构造请求参数
         params = {
