@@ -71,6 +71,7 @@ class EdbDatafeed(BaseDatafeed):
         # 计算起始日距今天数（使用带时区的 datetime）
         now = datetime.now(DB_TZ)
         req.start = req.start.astimezone(DB_TZ)
+        req.end = req.end.astimezone(DB_TZ)
         days_from_start = (now - req.start).days
         if req.interval == Interval.MINUTE and days_from_start >= FREE_MODE_MINUTE_DATA_DAYS:
             output(f"免费用户仅可获取最近 {FREE_MODE_MINUTE_DATA_DAYS} 天内的1分钟数据,自动处理开始时间。您请求的起始日距今 {days_from_start} 天。日线数据可查询任意历史区间。")
