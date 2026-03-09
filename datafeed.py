@@ -80,7 +80,7 @@ class EdbDatafeed(BaseDatafeed):
         if req.symbol.endswith("888"):
             tq_symbol = f"KQ.m@{req.exchange.value}.{req.symbol.replace('888', '')}"
         elif req.symbol.endswith("999"):
-            tq_symbol = f"KQ.m@{req.exchange.value}.{req.symbol.replace('999', '')}"
+            tq_symbol = f"KQ.i@{req.exchange.value}.{req.symbol.replace('999', '')}"
         else:
             if req.exchange.value in req.symbol:
                 tq_symbol = req.symbol
