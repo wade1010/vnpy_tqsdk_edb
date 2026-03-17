@@ -78,12 +78,14 @@ class EdbDatafeed(BaseDatafeed):
             # 1分钟周期刚好满1年时，使用当前时间往前一年+1分钟作为起始时间
             req.start = now - timedelta(days=FREE_MODE_MINUTE_DATA_DAYS) + timedelta(minutes=1)
 
-        if req.exchange.value in req.symbol:
-            req.symbol = req.symbol.replace(f"{req.exchange.value}.", "")
         if req.symbol.endswith("888"):
             tq_symbol = f"KQ.m@{req.exchange.value}.{req.symbol.replace('888', '')}"
+        elif req.symbol.endswith("88"):
+            tq_symbol = f"KQ.m@{req.exchange.value}.{req.symbol.replace('88', '')}"
         elif req.symbol.endswith("999"):
             tq_symbol = f"KQ.i@{req.exchange.value}.{req.symbol.replace('999', '')}"
+        elif req.symbol.endswith("99"):
+            tq_symbol = f"KQ.i@{req.exchange.value}.{req.symbol.replace('99', '')}"
         else:
             tq_symbol = f"{req.exchange.value}.{req.symbol}"
 
